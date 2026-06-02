@@ -207,6 +207,7 @@ def place_order():
     if not u:
         return redirect(url_for("login"))
     data = load_data()
+    categories = list({s["category"] for s in data["services"]})
     if request.method == "POST":
         service_name = request.form["service"]
         svc = next((s for s in data["services"] if s["name"]==service_name), None)
@@ -227,7 +228,7 @@ def place_order():
                 save_data(data)
                 flash(f"Order placed! KES {amount:,} held in escrow.", "success")
                 return redirect(url_for("client_dashboard"))
-    return render_template("place_order.html", user=u, services=data["services"])
+    return render_template("place_order.html", user=u, services=data["services"], categories=categories)
 
 # ── worker area ────────────────────────────────────────────────
 @app.route("/worker")
