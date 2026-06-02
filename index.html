@@ -11,35 +11,17 @@
   </div>
 </div>
 
-<!-- STATS BAR -->
 <div class="stats-grid" style="margin-bottom:32px;">
-  <div class="stat-card" style="--c:#2563EB">
-    <div class="val">1,250+</div><div class="lbl">Total Users</div>
-  </div>
-  <div class="stat-card" style="--c:#16A34A">
-    <div class="val">320+</div><div class="lbl">Verified Workers</div>
-  </div>
-  <div class="stat-card" style="--c:#F59E0B">
-    <div class="val">2,450</div><div class="lbl">Orders Completed</div>
-  </div>
-  <div class="stat-card" style="--c:#7C3AED">
-    <div class="val">KES 25M+</div><div class="lbl">Total Volume</div>
-  </div>
+  <div class="stat-card" style="--c:#2563EB"><div class="val">1,250+</div><div class="lbl">Total Users</div></div>
+  <div class="stat-card" style="--c:#16A34A"><div class="val">320+</div><div class="lbl">Verified Workers</div></div>
+  <div class="stat-card" style="--c:#F59E0B"><div class="val">2,450</div><div class="lbl">Orders Completed</div></div>
+  <div class="stat-card" style="--c:#7C3AED"><div class="val">KES 25M+</div><div class="lbl">Total Volume</div></div>
 </div>
 
-<!-- SERVICES PREVIEW -->
 <div style="margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;">
-  <div>
-    <div class="section-title">Our Services</div>
-    <div class="section-sub">Affordable Kenyan pricing · M-PESA payments</div>
-  </div>
+  <div><div class="section-title">Our Services</div><div class="section-sub">Affordable Kenyan pricing · M-PESA payments</div></div>
   <a href="/services" class="btn btn-primary btn-sm">View All</a>
 </div>
-
-{% set categories = [] %}
-{% for s in services %}
-  {% if s.category not in categories %}{% set _ = categories.append(s.category) %}{% endif %}
-{% endfor %}
 
 {% for cat in categories[:6] %}
 <div style="margin-bottom:24px;">
@@ -56,7 +38,6 @@
 </div>
 {% endfor %}
 
-<!-- HOW IT WORKS -->
 <div style="background:var(--dark);border-radius:20px;padding:40px;margin-top:40px;text-align:center;">
   <div style="font-size:22px;font-weight:800;color:#fff;margin-bottom:8px;">How NEXISS Works</div>
   <div style="color:#94A3B8;font-size:14px;margin-bottom:32px;">Simple 4-step process</div>
