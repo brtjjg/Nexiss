@@ -15,9 +15,7 @@
         <div class="form-group">
           <label>Select Service</label>
           <select name="service" id="svc-select" onchange="updatePrice()">
-            {% set cats = [] %}
-            {% for s in services %}{% if s.category not in cats %}{% set _ = cats.append(s.category) %}{% endif %}{% endfor %}
-            {% for cat in cats %}
+            {% for cat in categories %}
             <optgroup label="{{ cat }}">
               {% for s in services if s.category == cat %}
               <option value="{{ s.name }}" data-price="{{ s.price }}">{{ s.name }} – KES {{ "{:,}".format(s.price) }}</option>
