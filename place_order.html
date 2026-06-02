@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Place Order – NEXISS{% endblock %}
+{% block content %}
+<div style="max-width:520px;margin:0 auto;">
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div style="font-size:20px;font-weight:800;color:var(--dark);">Place an Order</div>
+        <div style="font-size:13px;color:var(--muted);">Your wallet: <strong style="color:var(--green);">KES {{ "{:,}".format(user.wallet) }}</strong></div>
+      </div>
+      <span style="font-size:28px;">🛒</span>
+    </div>
+    <div class="card-body">
+      <form method="POST">
+        <div class="form-group">
+          <label>Select Service</label>
+          <select name="service" id="svc-select" onchange="updatePrice()">
+            {% set cats = [] %}
+            {% for s in services %}{% if s.category not in cats %}{% set _ = cats.append(s.category) %}{% endif %}{% endfor %}
+            {% for cat in cats %}
+            <optgroup label="{{ cat }}">
+              {% for s in services if s.category == cat %}
+              <option value="{{ s.name }}" data-price="{{ s.price }}">{{ s.name }} – KES {{ "{:,}".format(s.price) }}</option>
+              {% endfor %}
+            </optgroup>
+            {% endfor %}
+          </select>
+        </div>
+        <div style="background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:12px;padding:16px;margin-bottom:18px;">
+          <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;margin-bottom:8px;font-family:'Space Mono',monospace;">PAYMENT BREAKDOWN</div>
+          <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;">
+            <span>Total Amount</span><span id="total" style="font-weight:800;color:var(--dark);">KES 3,500</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:4px;">
+            <span>Worker earns (70%)</span><span id="worker-cut" style="color:var(--green);font-weight:700;">KES 2,450</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);">
+            <span>Platform fee (30%)</span><span id="platform-cut" style="color:var(--red);font-weight:700;">KES 1,050</span>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;font-size:15px;">
+          🔒 Pay & Place Order (Escrow)
+        </button>
+      </form>
+      <div style="margin-top:14px;font-size:12px;color:var(--muted);text-align:center;">
+        💡 Payment held in escrow until you approve completed work
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function updatePrice(){
+  const sel = document.getElementById('svc-select');
+  const price = parseInt(sel.options[sel.selectedIndex].dataset.price);
+  const worker = Math.round(price * 0.7);
+  const platform = price - worker;
+  document.getElementById('total').textContent = 'KES ' + price.toLocaleString();
+  document.getElementById('worker-cut').textContent = 'KES ' + worker.toLocaleString();
+  document.getElementById('platform-cut').textContent = 'KES ' + platform.toLocaleString();
+}
+updatePrice();
+</script>
+{% endblock %}

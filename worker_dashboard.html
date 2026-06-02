@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block title %}Worker Dashboard – NEXISS{% endblock %}
+{% block content %}
+<div class="dash-layout">
+  <div class="sidebar">
+    <div class="s-user">
+      <div style="font-size:28px;margin-bottom:6px;">🔧</div>
+      <div class="s-name">{{ user.name }}</div>
+      <div class="s-role">Worker</div>
+    </div>
+    <a href="/worker" class="active"><span class="icon">🏠</span> Dashboard</a>
+    <a href="/services"><span class="icon">📋</span> All Services</a>
+    <a href="/logout" style="margin-top:20px;color:#EF4444!important;"><span class="icon">🚪</span> Logout</a>
+  </div>
+
+  <div>
+    <div style="margin-bottom:8px;">
+      <div style="font-size:22px;font-weight:800;color:var(--dark);">Welcome, {{ user.name.split()[0] }} 👋</div>
+      <div style="color:var(--muted);font-size:14px;">Track your jobs and earnings</div>
+    </div>
+
+    <div class="stats-grid" style="margin-top:20px;">
+      <div class="stat-card" style="--c:#16A34A">
+        <div class="val">KES {{ "{:,}".format(user.wallet) }}</div>
+        <div class="lbl">Available Balance</div>
+      </div>
+      <div class="stat-card" style="--c:#2563EB">
+        <div class="val">{{ jobs|selectattr('status','eq','In Progress')|list|length }}</div>
+        <div class="lbl">Assigned Jobs</div>
+      </div>
+      <div class="stat-card" style="--c:#F59E0B">
+        <div class="val">{{ user.completed or 0 }}</div>
+        <div class="lbl">Completed Jobs</div>
+      </div>
+      <div class="stat-card" style="--c:#7C3AED">
+        <div class="val">{{ user.rating or '—' }}</div>
+        <div class="lbl">Rating</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:4px;">
+      <div class="card-header">
+        <span style="font-weight:800;">My Jobs</span>
+        {% if user.verified %}<span class="badge badge-green">✓ Verified</span>{% else %}<span class="badge badge-orange">Pending Verification</span>{% endif %}
+      </div>
+      <div class="card-body" style="padding:0;">
+        {% if jobs %}
+        <table>
+          <thead><tr>
+            <th>Order ID</th><th>Service</th><th>Your Earning</th><th>Status</th><th>Action</th>
+          </tr></thead>
+          <tbody>
+          {% for j in jobs %}
+          <tr>
+            <td style="font-weight:700;color:var(--blue);font-family:'Space Mono',monospace;">{{ j.id }}</td>
+            <td>{{ j.service }}</td>
+            <td style="font-weight:800;color:var(--green);">KES {{ "{:,}".format(j.worker_cut) }}</td>
+            <td>
+              {% if j.status == 'Completed' %}<span class="badge badge-green">Completed</span>
+              {% elif j.status == 'In Progress' %}<span class="badge badge-blue">In Progress</span>
+              {% else %}<span class="badge badge-orange">Pending</span>{% endif %}
+            </td>
+            <td>
+              {% if j.status == 'In Progress' %}
+              <a href="/worker/complete/{{ j.id }}" class="btn btn-green btn-sm" onclick="return confirm('Mark as completed?')">✓ Complete</a>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div style="text-align:center;padding:40px;color:var(--muted);">
+          <div style="font-size:36px;margin-bottom:12px;">⏳</div>
+          <div style="font-weight:700;">No jobs assigned yet</div>
+          <div style="font-size:13px;margin-top:6px;">Admin will assign jobs to you soon</div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Earnings overview -->
+    <div class="card" style="margin-top:16px;">
+      <div class="card-header"><span style="font-weight:800;">💰 Earnings Overview</span></div>
+      <div class="card-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div style="background:#F0FDF4;border-radius:12px;padding:16px;border-left:4px solid var(--green);">
+            <div style="font-size:22px;font-weight:800;color:var(--green);font-family:'Space Mono',monospace;">KES {{ "{:,}".format(user.wallet) }}</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px;">Available to withdraw</div>
+          </div>
+          <div style="background:#FEF3C7;border-radius:12px;padding:16px;border-left:4px solid var(--orange);">
+            <div style="font-size:22px;font-weight:800;color:var(--orange);font-family:'Space Mono',monospace;">KES {{ "{:,}".format(user.pending or 0) }}</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px;">Pending in escrow</div>
+          </div>
+        </div>
+        <div style="margin-top:14px;padding:12px;background:#F8FAFC;border-radius:10px;font-size:12px;color:var(--muted);">
+          💡 Platform commission: 30% · Your share: 70% of each order
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

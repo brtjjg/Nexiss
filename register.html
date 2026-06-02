@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Register – NEXISS{% endblock %}
+{% block content %}
+<div style="max-width:460px;margin:40px auto;">
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div style="font-size:20px;font-weight:800;color:var(--dark);">Create Account</div>
+        <div style="font-size:13px;color:var(--muted);">Join Kenya's digital freelance marketplace</div>
+      </div>
+      <span style="font-size:28px;">🚀</span>
+    </div>
+    <div class="card-body">
+      <form method="POST">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" name="name" placeholder="John Kamau" required/>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" name="email" placeholder="you@gmail.com" required/>
+        </div>
+        <div class="form-group">
+          <label>I want to join as</label>
+          <select name="role">
+            <option value="client">Client – I want to buy services</option>
+            <option value="worker">Worker – I want to earn money</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" name="password" placeholder="Min. 8 characters" required/>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Create Account</button>
+      </form>
+      <div style="margin-top:16px;text-align:center;font-size:13px;color:var(--muted);">
+        Already have an account? <a href="/login" style="color:var(--blue);font-weight:700;">Sign In</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

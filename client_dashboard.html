@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Client Dashboard – NEXISS{% endblock %}
+{% block content %}
+<div class="dash-layout">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="s-user">
+      <div style="font-size:28px;margin-bottom:6px;">👤</div>
+      <div class="s-name">{{ user.name }}</div>
+      <div class="s-role">Client</div>
+    </div>
+    <a href="/client" class="active"><span class="icon">🏠</span> Dashboard</a>
+    <a href="/client/order"><span class="icon">🛒</span> Place Order</a>
+    <a href="/topup"><span class="icon">💳</span> Top Up Wallet</a>
+    <a href="/services"><span class="icon">📋</span> Browse Services</a>
+    <a href="/logout" style="margin-top:20px;color:#EF4444!important;"><span class="icon">🚪</span> Logout</a>
+  </div>
+
+  <!-- Main content -->
+  <div>
+    <div style="margin-bottom:8px;">
+      <div style="font-size:22px;font-weight:800;color:var(--dark);">Welcome, {{ user.name.split()[0] }} 👋</div>
+      <div style="color:var(--muted);font-size:14px;">Manage your orders and payments</div>
+    </div>
+
+    <div class="stats-grid" style="margin-top:20px;">
+      <div class="stat-card" style="--c:#16A34A">
+        <div class="val">KES {{ "{:,}".format(user.wallet) }}</div>
+        <div class="lbl">Wallet Balance</div>
+      </div>
+      <div class="stat-card" style="--c:#2563EB">
+        <div class="val">{{ orders|length }}</div>
+        <div class="lbl">Total Orders</div>
+      </div>
+      <div class="stat-card" style="--c:#F59E0B">
+        <div class="val">{{ orders|selectattr('status','eq','In Progress')|list|length }}</div>
+        <div class="lbl">Active Orders</div>
+      </div>
+      <div class="stat-card" style="--c:#7C3AED">
+        <div class="val">{{ orders|selectattr('status','eq','Completed')|list|length }}</div>
+        <div class="lbl">Completed</div>
+      </div>
+    </div>
+
+    <!-- Orders -->
+    <div class="card" style="margin-top:4px;">
+      <div class="card-header">
+        <span style="font-weight:800;">My Orders</span>
+        <a href="/client/order" class="btn btn-primary btn-sm">+ New Order</a>
+      </div>
+      <div class="card-body" style="padding:0;">
+        {% if orders %}
+        <table>
+          <thead><tr>
+            <th>Order ID</th><th>Service</th><th>Amount</th><th>Status</th><th>Date</th>
+          </tr></thead>
+          <tbody>
+          {% for o in orders %}
+          <tr>
+            <td style="font-weight:700;color:var(--blue);font-family:'Space Mono',monospace;">{{ o.id }}</td>
+            <td>{{ o.service }}</td>
+            <td style="font-weight:700;">KES {{ "{:,}".format(o.amount) }}</td>
+            <td>
+              {% if o.status == 'Completed' %}<span class="badge badge-green">Completed</span>
+              {% elif o.status == 'In Progress' %}<span class="badge badge-blue">In Progress</span>
+              {% else %}<span class="badge badge-orange">Pending</span>{% endif %}
+            </td>
+            <td style="color:var(--muted);font-size:12px;">{{ o.date }}</td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div style="text-align:center;padding:40px;color:var(--muted);">
+          <div style="font-size:36px;margin-bottom:12px;">📋</div>
+          <div style="font-weight:700;">No orders yet</div>
+          <a href="/client/order" class="btn btn-primary btn-sm" style="margin-top:12px;">Place Your First Order</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Wallet info -->
+    <div class="card" style="margin-top:16px;">
+      <div class="card-header"><span style="font-weight:800;">💳 Wallet & Payments</span></div>
+      <div class="card-body">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+          <div>
+            <div style="font-size:28px;font-weight:800;color:var(--green);font-family:'Space Mono',monospace;">KES {{ "{:,}".format(user.wallet) }}</div>
+            <div style="color:var(--muted);font-size:13px;">Available Balance</div>
+          </div>
+          <a href="/topup" class="btn btn-green">+ Top Up via M-PESA</a>
+        </div>
+        <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px;">
+          <span>🔒</span> Payments are held in escrow until you approve completed work
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

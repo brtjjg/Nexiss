@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}NEXISS – Kenya's Digital Freelance Marketplace{% endblock %}
+{% block content %}
+
+<div class="hero">
+  <h1>Find the Right <span>Service</span>,<br/>Right Now</h1>
+  <p>Connect with talented Kenyan professionals. Pay securely via M-PESA. Get things done.</p>
+  <div class="hero-btns">
+    <a href="/services" class="btn btn-primary">Browse Services</a>
+    <a href="/register" style="background:rgba(255,255,255,.1);color:#fff;padding:11px 22px;border-radius:10px;font-weight:700;font-size:14px;display:inline-flex;align-items:center;">Become a Worker →</a>
+  </div>
+</div>
+
+<!-- STATS BAR -->
+<div class="stats-grid" style="margin-bottom:32px;">
+  <div class="stat-card" style="--c:#2563EB">
+    <div class="val">1,250+</div><div class="lbl">Total Users</div>
+  </div>
+  <div class="stat-card" style="--c:#16A34A">
+    <div class="val">320+</div><div class="lbl">Verified Workers</div>
+  </div>
+  <div class="stat-card" style="--c:#F59E0B">
+    <div class="val">2,450</div><div class="lbl">Orders Completed</div>
+  </div>
+  <div class="stat-card" style="--c:#7C3AED">
+    <div class="val">KES 25M+</div><div class="lbl">Total Volume</div>
+  </div>
+</div>
+
+<!-- SERVICES PREVIEW -->
+<div style="margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;">
+  <div>
+    <div class="section-title">Our Services</div>
+    <div class="section-sub">Affordable Kenyan pricing · M-PESA payments</div>
+  </div>
+  <a href="/services" class="btn btn-primary btn-sm">View All</a>
+</div>
+
+{% set categories = [] %}
+{% for s in services %}
+  {% if s.category not in categories %}{% set _ = categories.append(s.category) %}{% endif %}
+{% endfor %}
+
+{% for cat in categories[:6] %}
+<div style="margin-bottom:24px;">
+  <div style="font-size:13px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;font-family:'Space Mono',monospace;">{{ cat }}</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">
+    {% for s in services if s.category == cat %}
+    <div class="card" style="padding:16px 18px;transition:box-shadow .2s,transform .2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 32px rgba(0,0,0,.12)'" onmouseout="this.style.transform='none';this.style.boxShadow=''">
+      <div style="font-size:14px;font-weight:700;color:var(--dark);margin-bottom:6px;">{{ s.name }}</div>
+      <div style="font-size:16px;font-weight:800;color:var(--blue);font-family:'Space Mono',monospace;">KES {{ "{:,}".format(s.price) }}</div>
+      <a href="/client/order" style="display:block;margin-top:10px;background:var(--blue);color:#fff;text-align:center;padding:7px;border-radius:7px;font-size:12px;font-weight:700;">Order Now</a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endfor %}
+
+<!-- HOW IT WORKS -->
+<div style="background:var(--dark);border-radius:20px;padding:40px;margin-top:40px;text-align:center;">
+  <div style="font-size:22px;font-weight:800;color:#fff;margin-bottom:8px;">How NEXISS Works</div>
+  <div style="color:#94A3B8;font-size:14px;margin-bottom:32px;">Simple 4-step process</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px;">
+    {% for step in [
+      ("01","Client Orders","Choose a service and pay via M-PESA or wallet","#2563EB"),
+      ("02","Escrow Holds","Payment is held safely until work is done","#F59E0B"),
+      ("03","Worker Delivers","Verified worker completes the task","#16A34A"),
+      ("04","You Approve","Release payment once satisfied","#7C3AED")
+    ] %}
+    <div style="background:rgba(255,255,255,.05);border-radius:14px;padding:22px 18px;border:1px solid rgba(255,255,255,.08);">
+      <div style="font-size:28px;font-weight:800;color:{{ step[3] }};font-family:'Space Mono',monospace;margin-bottom:10px;">{{ step[0] }}</div>
+      <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:6px;">{{ step[1] }}</div>
+      <div style="font-size:12px;color:#94A3B8;line-height:1.6;">{{ step[2] }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

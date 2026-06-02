@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Services – NEXISS{% endblock %}
+{% block content %}
+<div style="margin-bottom:24px;">
+  <div class="section-title">All Services</div>
+  <div class="section-sub">Kenyan pricing · 70% goes to worker · M-PESA supported</div>
+</div>
+
+<!-- Category filter tabs -->
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;" id="cats">
+  <button onclick="filter('all')" class="cat-btn active" data-cat="all" style="padding:7px 16px;border-radius:8px;border:2px solid var(--blue);background:var(--blue);color:#fff;font-weight:700;font-size:12px;cursor:pointer;font-family:'Sora',sans-serif;">All</button>
+  {% for cat in categories %}
+  <button onclick="filter('{{cat}}')" class="cat-btn" data-cat="{{ cat }}" style="padding:7px 16px;border-radius:8px;border:2px solid var(--border);background:#fff;color:var(--text);font-weight:700;font-size:12px;cursor:pointer;font-family:'Sora',sans-serif;">{{ cat }}</button>
+  {% endfor %}
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;" id="svc-grid">
+  {% for s in services %}
+  <div class="card svc-card" data-cat="{{ s.category }}" style="padding:20px;transition:all .2s;cursor:default;" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 12px 40px rgba(0,0,0,.12)'" onmouseout="this.style.transform='none';this.style.boxShadow=''">
+    <div style="font-size:11px;font-weight:700;color:var(--blue);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;font-family:'Space Mono',monospace;">{{ s.category }}</div>
+    <div style="font-size:15px;font-weight:700;color:var(--dark);margin-bottom:10px;line-height:1.3;">{{ s.name }}</div>
+    <div style="font-size:20px;font-weight:800;color:var(--blue);font-family:'Space Mono',monospace;margin-bottom:4px;">KES {{ "{:,}".format(s.price) }}</div>
+    <div style="font-size:10px;color:var(--muted);margin-bottom:12px;">Worker earns KES {{ "{:,}".format((s.price * 0.7)|int) }}</div>
+    {% if user %}
+    <a href="/client/order" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;text-align:center;">Order</a>
+    {% else %}
+    <a href="/login" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;text-align:center;">Login to Order</a>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+
+<script>
+function filter(cat){
+  document.querySelectorAll('.cat-btn').forEach(b=>{
+    b.style.background= b.dataset.cat===cat?'var(--blue)':'#fff';
+    b.style.color= b.dataset.cat===cat?'#fff':'var(--text)';
+    b.style.borderColor= b.dataset.cat===cat?'var(--blue)':'var(--border)';
+  });
+  document.querySelectorAll('.svc-card').forEach(c=>{
+    c.style.display= (cat==='all'||c.dataset.cat===cat)?'block':'none';
+  });
+}
+</script>
+{% endblock %}
